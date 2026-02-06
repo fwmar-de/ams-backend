@@ -10,9 +10,9 @@ import { Request } from 'express';
 import { azureAdConfig } from './auth.config';
 import type {
   JwtPayload,
-  User,
   AuthenticatedRequest,
-} from '../types/user.types';
+  AzureAdUser,
+} from '../types/auth.types';
 
 @Injectable()
 export class AzureAdAuthGuard implements CanActivate {
@@ -47,8 +47,8 @@ export class AzureAdAuthGuard implements CanActivate {
       }
 
       // Extract user information from token
-      const user: User = {
-        id: payload.oid,
+      const user: AzureAdUser = {
+        oid: payload.oid,
         name: payload.name || 'Unknown User',
         email: payload.email || payload.preferred_username || '',
       };

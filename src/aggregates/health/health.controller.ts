@@ -5,7 +5,7 @@ import {
   HttpHealthIndicator,
   MemoryHealthIndicator,
 } from '@nestjs/terminus';
-import { AzureAdAuthGuard } from '../auth/auth.guard';
+import { AzureAdAuthGuard } from 'src/auth/auth.guard';
 
 @Controller('health')
 export class HealthController {

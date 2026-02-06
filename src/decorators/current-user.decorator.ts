@@ -1,5 +1,5 @@
 import { createParamDecorator, ExecutionContext } from '@nestjs/common';
-import type { AuthenticatedRequest, User } from '../types/user.types';
+import type { AuthenticatedRequest, AzureAdUser } from '../types/auth.types';
 
 /**
  * Decorator to extract the current authenticated user from the request
@@ -15,7 +15,7 @@ import type { AuthenticatedRequest, User } from '../types/user.types';
  * ```
  */
 export const CurrentUser = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext): User | undefined => {
+  (data: unknown, ctx: ExecutionContext): AzureAdUser | undefined => {
     const request = ctx.switchToHttp().getRequest<AuthenticatedRequest>();
     return request.user;
   },

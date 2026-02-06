@@ -1,0 +1,108 @@
+{
+  "info": {
+    "_postman_id": "94f15fa5-c72a-427b-ab9c-1741904a4ca3",
+    "name": "user",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "createUser",
+      "event": [
+        {
+          "listen": "prerequest",
+          "script": {
+            "id": "f4a2b9a6-2715-48fe-bc88-84677e9d37eb",
+            "exec": [""],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        },
+        {
+          "listen": "test",
+          "script": {
+            "id": "95587aff-561b-4e6f-aa02-62138aae92c2",
+            "exec": [
+              "const response = pm.response.json();\r",
+              "\r",
+              "if(response.id) pm.environment.set(\"id\", response.id);"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "id": "a434be40-d2b0-4fba-9d2b-70233db0a932",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"oid\": \"{{oid}}\",\r\n    \"mpid\": null,\r\n    \"name\": \"Max Mustermann\",\r\n    \"email\": \"max.mustermann@email.de\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BASE_URL}}user",
+          "host": ["{{BASE_URL}}user"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "getUserById",
+      "id": "ea7152f7-db04-4b2c-a6ae-4ae845a5ae35",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}user/{{id}}",
+          "host": ["{{BASE_URL}}user"],
+          "path": ["{{id}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "deleteUserById",
+      "id": "b75d8c96-098e-4cb5-971b-1621c1a04fbe",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{BASE_URL}}user/{{id}}",
+          "host": ["{{BASE_URL}}user"],
+          "path": ["{{id}}"]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "updateUser",
+      "id": "506178b3-9af5-4089-8b42-342976cf18ec",
+      "request": {
+        "method": "PATCH",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"oid\": \"{{oid}}\",\r\n    \"mpid\": null,\r\n    \"name\": \"Max Mustermann2\",\r\n    \"email\": \"max.mustermann2@email.de\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{BASE_URL}}user/{{id}}",
+          "host": ["{{BASE_URL}}user"],
+          "path": ["{{id}}"]
+        }
+      },
+      "response": []
+    }
+  ]
+}

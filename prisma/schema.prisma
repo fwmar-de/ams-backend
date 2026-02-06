@@ -1,6 +1,7 @@
 generator client {
-  provider = "prisma-client"
-  output   = "../generated/prisma"
+  provider     = "prisma-client"
+  output       = "../generated/prisma"
+  moduleFormat = "cjs"
 }
 
 datasource db {
@@ -8,8 +9,106 @@ datasource db {
 }
 
 model User {
-  id        String   @id @default(uuid())
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  oid       String    @unique
+  mpid      String?   @unique
   name      String
-  email     String   @unique
-  createdAt DateTime @default(now())
+  email     String    @unique
+  createdAt DateTime  @default(now())
+  updatedAt DateTime? @updatedAt
+
+  rankId    String?  @db.Uuid
+  rank      Rank?    @relation(fields: [rankId], references: [id])
+  addressId String?  @db.Uuid
+  address   Address? @relation(fields: [addressId], references: [id])
+
+  participations Participation[]
+  promotions     Promotion[]
+
+  @@map("users")
+}
+
+model Location {
+  id   String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name String
+
+  addressId String?  @db.Uuid
+  address   Address? @relation(fields: [addressId], references: [id])
+
+  participations Participation[]
+
+  @@map("locations")
+}
+
+model Address {
+  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  street      String
+  houseNumber Int
+  zipCode     Int
+  city        String
+  country     String
+
+  locations Location[]
+  users     User[]
+
+  @@map("addresses")
+}
+
+model Course {
+  id           String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String
+  abbreviation String
+
+  coursesForRanks CoursesForRanks[]
+  participations  Participation[]
+
+  @@map("courses")
+}
+
+model Participation {
+  id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  startDate DateTime
+  endDate   DateTime
+  passed    Boolean  @default(true)
+
+  locationId String   @db.Uuid
+  location   Location @relation(fields: [locationId], references: [id])
+  courseId   String   @db.Uuid
+  course     Course   @relation(fields: [courseId], references: [id])
+  userId     String   @db.Uuid
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@map("participations")
+}
+
+model Rank {
+  id           String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name         String
+  abbreviation String
+
+  users           User[]
+  coursesForRanks CoursesForRanks[]
+  promotions      Promotion[]
+
+  @@map("ranks")
+}
+
+model Promotion {
+  id   String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  date DateTime
+
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id])
+  rankId String @db.Uuid
+  rank   Rank   @relation(fields: [rankId], references: [id])
+}
+
+model CoursesForRanks {
+  courseId String @db.Uuid
+  course   Course @relation(fields: [courseId], references: [id])
+  rankId   String @db.Uuid
+  rank     Rank   @relation(fields: [rankId], references: [id])
+
+  @@id([courseId, rankId])
+  @@map("courses_for_ranks")
 }

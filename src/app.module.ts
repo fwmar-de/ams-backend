@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
-import { HealthModule } from './health/health.module';
-import { UserModule } from './user/user.module';
 import { HttpModule } from '@nestjs/axios';
+import { PrismaModule } from './prisma';
+import { HealthModule } from './aggregates/health/health.module';
+import { UserModule } from './aggregates/user/user.module';
+import { LocationModule } from './aggregates/location/location.module';
 
 @Module({
-  imports: [HealthModule, UserModule, HttpModule],
-  controllers: [AppController],
-  providers: [AppService],
+  imports: [PrismaModule, HealthModule, HttpModule, UserModule, LocationModule],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

@@ -1,6 +1,4 @@
 {
-  "cSpell.language": "en,en-GB,de-DE",
-
   "editor.formatOnSave": true,
   "[typescript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

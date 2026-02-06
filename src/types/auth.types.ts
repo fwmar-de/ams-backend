@@ -1,8 +1,8 @@
 /**
  * User data from Azure AD token claims
  */
-export interface User {
-  id: string;
+export interface AzureAdUser {
+  oid: string;
   name: string;
   email: string;
 }
@@ -33,6 +33,6 @@ export interface JwtPayload extends AzureAdTokenClaims {
  * Request with authenticated user
  */
 export interface AuthenticatedRequest extends Request {
-  user?: User;
+  user?: AzureAdUser;
   token?: JwtPayload;
 }
