@@ -9,12 +9,16 @@ import {
 } from '@nestjs/common';
 import { LocationService } from './location.service';
 import { CreateLocationDto, GetLocationDto, UpdateLocationDto } from './dto';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@Controller('location')
+@ApiTags('locations')
+@Controller('locations')
 export class LocationController {
   constructor(private readonly locationService: LocationService) {}
 
   @Post()
+  @ApiBody({ type: CreateLocationDto })
+  @ApiResponse({ status: 201, type: GetLocationDto })
   async createLocation(
     @Body() dto: CreateLocationDto,
   ): Promise<GetLocationDto> {
@@ -23,12 +27,15 @@ export class LocationController {
   }
 
   @Get(':id')
+  @ApiResponse({ status: 200, type: GetLocationDto })
   async getLocationById(@Param('id') id: string): Promise<GetLocationDto> {
     const location = await this.locationService.getLocationById(id);
     return new GetLocationDto(location);
   }
 
   @Patch(':id')
+  @ApiBody({ type: UpdateLocationDto })
+  @ApiResponse({ status: 200, type: GetLocationDto })
   async updateLocation(
     @Param('id') id: string,
     @Body() dto: UpdateLocationDto,
@@ -38,6 +45,7 @@ export class LocationController {
   }
 
   @Delete(':id')
+  @ApiResponse({ status: 200 })
   async deleteLocationById(@Param('id') id: string): Promise<void> {
     return await this.locationService.deleteLocationById(id);
   }

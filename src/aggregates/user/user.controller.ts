@@ -14,24 +14,31 @@ import type { AzureAdUser, JwtPayload } from 'src/types';
 import { UserService } from './user.service';
 import { CreateUserDto, GetUserDto, UpdateUserDto } from './dto';
 import { User } from 'generated/prisma/client';
+import { ApiBody, ApiResponse, ApiTags } from '@nestjs/swagger';
 
-@Controller('user')
+@ApiTags('users')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Post()
+  @ApiBody({ type: CreateUserDto })
+  @ApiResponse({ status: 201, type: GetUserDto })
   async createUser(@Body() dto: CreateUserDto): Promise<GetUserDto> {
     const newUser: User = await this.userService.createUser(dto);
     return new GetUserDto(newUser);
   }
 
   @Get(':id')
+  @ApiResponse({ status: 200, type: GetUserDto })
   async getUserById(@Param('id') id: string): Promise<GetUserDto> {
     const user = await this.userService.getUserById(id);
     return new GetUserDto(user);
   }
 
   @Patch(':id')
+  @ApiBody({ type: UpdateUserDto })
+  @ApiResponse({ status: 200, type: GetUserDto })
   async updateUser(
     @Param('id') id: string,
     @Body() dto: UpdateUserDto,
@@ -41,6 +48,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @ApiResponse({ status: 200 })
   async deleteUserById(@Param('id') id: string): Promise<void> {
     return await this.userService.deleteUserById(id);
   }

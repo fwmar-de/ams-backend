@@ -1,4 +1,5 @@
 import { Controller, Get, UseGuards } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import {
   HealthCheck,
   HealthCheckService,
@@ -7,6 +8,7 @@ import {
 } from '@nestjs/terminus';
 import { AzureAdAuthGuard } from 'src/auth/auth.guard';
 
+@ApiTags('health')
 @Controller('health')
 export class HealthController {
   constructor(

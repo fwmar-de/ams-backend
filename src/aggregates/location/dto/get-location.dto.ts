@@ -1,8 +1,14 @@
+import { ApiProperty } from '@nestjs/swagger';
 import { Location } from 'generated/prisma/client';
 
 export class GetLocationDto {
+  @ApiProperty({ example: 'f2a9d3b7-1c4e-48f2-9d8b-7e6a5c3b2f1a' })
   id: string;
+
+  @ApiProperty({ example: 'Feuer- und Rettungswache Monheim am Rhein' })
   name: string;
+
+  @ApiProperty({ example: null })
   addressId?: string;
 
   constructor(location: Location) {
