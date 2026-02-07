@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { Location } from 'generated/prisma/client';
+import { Prisma } from 'generated/prisma/client';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateLocationDto, UpdateLocationDto } from './dto';
 
@@ -7,26 +7,57 @@ import { CreateLocationDto, UpdateLocationDto } from './dto';
 export class LocationService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async getLocationById(id: string): Promise<Location> {
+  private readonly withAddress = { address: true } as const;
+
+  async getLocationById(
+    id: string,
+  ): Promise<Prisma.LocationGetPayload<{ include: { address: true } }>> {
     return this.prisma.location.findUniqueOrThrow({
       where: { id },
+      include: this.withAddress,
     });
   }
 
-  async getAll(): Promise<Location[]> {
-    return this.prisma.location.findMany();
+  async getAll(): Promise<
+    Prisma.LocationGetPayload<{ include: { address: true } }>[]
+  > {
+    return this.prisma.location.findMany({
+      include: this.withAddress,
+    });
   }
 
-  async createLocation(dto: CreateLocationDto): Promise<Location> {
+  async createLocation(
+    dto: CreateLocationDto,
+  ): Promise<Prisma.LocationGetPayload<{ include: { address: true } }>> {
     return this.prisma.location.create({
-      data: { ...dto },
+      data: {
+        name: dto.name,
+        address: {
+          create: dto.address,
+        },
+      },
+      include: this.withAddress,
     });
   }
 
-  async updateLocation(id: string, dto: UpdateLocationDto): Promise<Location> {
+  async updateLocation(
+    id: string,
+    dto: UpdateLocationDto,
+  ): Promise<Prisma.LocationGetPayload<{ include: { address: true } }>> {
     return this.prisma.location.update({
       where: { id },
-      data: { ...dto },
+      data: {
+        name: dto.name,
+        address: dto.address
+          ? {
+              upsert: {
+                create: dto.address,
+                update: dto.address,
+              },
+            }
+          : undefined,
+      },
+      include: this.withAddress,
     });
   }
 

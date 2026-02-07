@@ -1,15 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import { Type } from 'class-transformer';
+import { IsNotEmpty, IsString, ValidateNested } from 'class-validator';
+import { CreateAddressDto } from 'src/aggregates/address/dto';
 
 export class CreateLocationDto {
   @IsNotEmpty()
   @IsString()
-  @ApiProperty({ example: 'Feuer- und Rettungswache Monheim am Rhein' })
+  @ApiProperty({ example: 'Musterfeuerwache' })
   name: string;
 
-  @IsOptional()
-  @IsString()
-  @IsUUID()
-  @ApiProperty({ example: null })
-  addressId?: string;
+  @ValidateNested()
+  @Type(() => CreateAddressDto)
+  @ApiProperty({ type: CreateAddressDto })
+  address: CreateAddressDto;
 }

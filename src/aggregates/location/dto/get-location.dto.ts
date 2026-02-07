@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Location } from 'generated/prisma/client';
+import { Address, Location } from 'generated/prisma/client';
+import { GetAddressDto } from 'src/aggregates/address/dto';
 
 export class GetLocationDto {
   @ApiProperty({ example: 'f2a9d3b7-1c4e-48f2-9d8b-7e6a5c3b2f1a' })
@@ -8,12 +9,14 @@ export class GetLocationDto {
   @ApiProperty({ example: 'Feuer- und Rettungswache Monheim am Rhein' })
   name: string;
 
-  @ApiProperty({ example: null })
-  addressId?: string;
+  @ApiProperty({ type: GetAddressDto })
+  address?: GetAddressDto;
 
-  constructor(location: Location) {
+  constructor(location: Location & { address?: Address | null }) {
     this.id = location.id;
     this.name = location.name;
-    this.addressId = location.addressId ?? undefined;
+    this.address = location.address
+      ? new GetAddressDto(location.address)
+      : undefined;
   }
 }
