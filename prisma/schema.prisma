@@ -101,6 +101,8 @@ model Promotion {
   user   User   @relation(fields: [userId], references: [id])
   rankId String @db.Uuid
   rank   Rank   @relation(fields: [rankId], references: [id])
+
+  @@map("promotions")
 }
 
 model CoursesForRanks {
