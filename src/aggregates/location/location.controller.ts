@@ -33,6 +33,13 @@ export class LocationController {
     return new GetLocationDto(location);
   }
 
+  @Get()
+  @ApiResponse({ status: 200, type: [GetLocationDto] })
+  async getAllLocations(): Promise<GetLocationDto[]> {
+    const locations = await this.locationService.getAll();
+    return locations.map((location) => new GetLocationDto(location));
+  }
+
   @Patch(':id')
   @ApiBody({ type: UpdateLocationDto })
   @ApiResponse({ status: 200, type: GetLocationDto })
