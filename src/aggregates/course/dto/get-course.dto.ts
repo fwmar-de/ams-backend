@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Course, Location } from 'generated/prisma/client';
+import { Course } from 'generated/prisma/client';
 
 export class GetCourseDto {
   @ApiProperty({ example: 'f2a9d3b7-1c4e-48f2-9d8b-7e6a5c3b2f1a' })
