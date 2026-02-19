@@ -5,6 +5,7 @@ import { HealthModule } from './aggregates/health/health.module';
 import { UserModule } from './aggregates/user/user.module';
 import { LocationModule } from './aggregates/location/location.module';
 import { CourseModule } from './aggregates/course/course.module';
+import { RankModule } from './aggregates/rank/rank.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { CourseModule } from './aggregates/course/course.module';
     UserModule,
     LocationModule,
     CourseModule,
+    RankModule,
   ],
   controllers: [],
   providers: [],
