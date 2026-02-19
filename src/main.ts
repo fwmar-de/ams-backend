@@ -29,6 +29,7 @@ async function bootstrap() {
     .addTag('users', 'User management endpoints')
     .addTag('locations', 'Location management endpoints')
     .addTag('health', 'Health check endpoints')
+    .addTag('courses', 'Course management endpoints')
     .addServer('http://localhost:3000', 'Local development')
     .build();
 
