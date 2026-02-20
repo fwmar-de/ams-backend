@@ -14,6 +14,7 @@ model User {
   mpid      String?   @unique
   name      String
   email     String    @unique
+  joinedAt  DateTime?
   createdAt DateTime  @default(now())
   updatedAt DateTime? @updatedAt
 
@@ -59,8 +60,9 @@ model Course {
   name         String
   abbreviation String
 
-  coursesForRanks CoursesForRanks[]
-  participations  Participation[]
+  coursesForRanks       CoursesForRanks[]
+  participations        Participation[]
+  promotionRequirements PromotionRequirement[]
 
   @@map("courses")
 }
@@ -85,10 +87,15 @@ model Rank {
   id           String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
   name         String
   abbreviation String
+  level        Int    @unique
 
   users           User[]
   coursesForRanks CoursesForRanks[]
   promotions      Promotion[]
+  // Anforderungen, um DIESEN Rang zu erreichen
+  requirements    PromotionRequirement[] @relation("TargetRank")
+  // Anforderungen, wo dieser Rang als Voraussetzung dient
+  requiredFor     PromotionRequirement[] @relation("RequiredRank")
 
   @@map("ranks")
 }
@@ -113,4 +120,32 @@ model CoursesForRanks {
 
   @@id([courseId, rankId])
   @@map("courses_for_ranks")
+}
+
+model PromotionRequirement {
+  id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+
+  // Zielrang der Beförderung
+  rankId String @db.Uuid
+  rank   Rank   @relation("TargetRank", fields: [rankId], references: [id])
+
+  type     RequirementType
+  minYears Int?
+
+  requiredRankId   String? @db.Uuid
+  requiredRank     Rank?   @relation("RequiredRank", fields: [requiredRankId], references: [id])
+  requiredCourseId String? @db.Uuid
+  requiredCourse   Course? @relation(fields: [requiredCourseId], references: [id])
+
+  // Gleicher groupKey = ODER-Gruppe, Gruppen selbst mit AND verknüpft
+  groupKey String?
+
+  @@map("promotion_requirements")
+}
+
+enum RequirementType {
+  MIN_YEARS_IN_RANK
+  MIN_YEARS_TOTAL_SERVICE
+  REQUIRED_COURSE
+  REQUIRED_PREVIOUS_RANK
 }

@@ -18,6 +18,9 @@ export class GetUserDto {
   email: string;
 
   @ApiProperty({ example: '2024-01-01T12:00:00Z' })
+  joinedAt?: Date;
+
+  @ApiProperty({ example: '2024-01-01T12:00:00Z' })
   createdAt: Date;
 
   @ApiProperty({ example: null })
@@ -36,6 +39,7 @@ export class GetUserDto {
     this.name = user.name;
     this.email = user.email;
     this.createdAt = user.createdAt;
+    this.joinedAt = user.joinedAt ?? undefined;
     this.updatedAt = user.updatedAt ?? undefined;
     this.addressId = user.addressId ?? undefined;
     this.rankId = user.rankId ?? undefined;

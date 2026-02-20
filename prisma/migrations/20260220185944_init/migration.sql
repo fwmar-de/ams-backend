@@ -1,3 +1,6 @@
+-- CreateEnum
+CREATE TYPE "RequirementType" AS ENUM ('MIN_YEARS_IN_RANK', 'MIN_YEARS_TOTAL_SERVICE', 'REQUIRED_COURSE', 'REQUIRED_PREVIOUS_RANK');
+
 -- CreateTable
 CREATE TABLE "users" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
@@ -5,6 +8,7 @@ CREATE TABLE "users" (
     "mpid" TEXT,
     "name" TEXT NOT NULL,
     "email" TEXT NOT NULL,
+    "joinedAt" TIMESTAMP(3),
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3),
     "rankId" UUID,
@@ -61,6 +65,7 @@ CREATE TABLE "ranks" (
     "id" UUID NOT NULL DEFAULT gen_random_uuid(),
     "name" TEXT NOT NULL,
     "abbreviation" TEXT NOT NULL,
+    "level" INTEGER NOT NULL,
 
     CONSTRAINT "ranks_pkey" PRIMARY KEY ("id")
 );
@@ -83,6 +88,19 @@ CREATE TABLE "courses_for_ranks" (
     CONSTRAINT "courses_for_ranks_pkey" PRIMARY KEY ("courseId","rankId")
 );
 
+-- CreateTable
+CREATE TABLE "promotion_requirements" (
+    "id" UUID NOT NULL DEFAULT gen_random_uuid(),
+    "rankId" UUID NOT NULL,
+    "type" "RequirementType" NOT NULL,
+    "minYears" INTEGER,
+    "requiredRankId" UUID,
+    "requiredCourseId" UUID,
+    "groupKey" TEXT,
+
+    CONSTRAINT "promotion_requirements_pkey" PRIMARY KEY ("id")
+);
+
 -- CreateIndex
 CREATE UNIQUE INDEX "users_oid_key" ON "users"("oid");
 
@@ -91,6 +109,9 @@ CREATE UNIQUE INDEX "users_mpid_key" ON "users"("mpid");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "ranks_level_key" ON "ranks"("level");
 
 -- AddForeignKey
 ALTER TABLE "users" ADD CONSTRAINT "users_rankId_fkey" FOREIGN KEY ("rankId") REFERENCES "ranks"("id") ON DELETE SET NULL ON UPDATE CASCADE;
@@ -121,3 +142,12 @@ ALTER TABLE "courses_for_ranks" ADD CONSTRAINT "courses_for_ranks_courseId_fkey"
 
 -- AddForeignKey
 ALTER TABLE "courses_for_ranks" ADD CONSTRAINT "courses_for_ranks_rankId_fkey" FOREIGN KEY ("rankId") REFERENCES "ranks"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "promotion_requirements" ADD CONSTRAINT "promotion_requirements_rankId_fkey" FOREIGN KEY ("rankId") REFERENCES "ranks"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "promotion_requirements" ADD CONSTRAINT "promotion_requirements_requiredRankId_fkey" FOREIGN KEY ("requiredRankId") REFERENCES "ranks"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "promotion_requirements" ADD CONSTRAINT "promotion_requirements_requiredCourseId_fkey" FOREIGN KEY ("requiredCourseId") REFERENCES "courses"("id") ON DELETE SET NULL ON UPDATE CASCADE;

@@ -22,6 +22,7 @@ export class RankService {
       data: {
         name: dto.name,
         abbreviation: dto.abbreviation,
+        level: dto.level,
       },
     });
   }
@@ -35,6 +36,7 @@ export class RankService {
       data: {
         name: dto.name,
         abbreviation: dto.abbreviation,
+        level: dto.level,
       },
     });
   }
