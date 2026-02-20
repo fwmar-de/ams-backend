@@ -11,9 +11,13 @@ export class GetRankDto {
   @ApiProperty({ example: 'BOI' })
   abbreviation?: string;
 
+  @ApiProperty({ example: 10 })
+  level: number;
+
   constructor(rank: Rank) {
     this.id = rank.id;
     this.name = rank.name;
     this.abbreviation = rank.abbreviation;
+    this.level = rank.level;
   }
 }
