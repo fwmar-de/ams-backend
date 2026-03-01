@@ -60,7 +60,6 @@ model Course {
   name         String
   abbreviation String
 
-  coursesForRanks       CoursesForRanks[]
   participations        Participation[]
   promotionRequirements PromotionRequirement[]
 
@@ -89,13 +88,12 @@ model Rank {
   abbreviation String
   level        Int    @unique
 
-  users           User[]
-  coursesForRanks CoursesForRanks[]
-  promotions      Promotion[]
+  users        User[]
+  promotions   Promotion[]
   // Anforderungen, um DIESEN Rang zu erreichen
-  requirements    PromotionRequirement[] @relation("TargetRank")
+  requirements PromotionRequirement[] @relation("TargetRank")
   // Anforderungen, wo dieser Rang als Voraussetzung dient
-  requiredFor     PromotionRequirement[] @relation("RequiredRank")
+  requiredFor  PromotionRequirement[] @relation("RequiredRank")
 
   @@map("ranks")
 }
@@ -110,16 +108,6 @@ model Promotion {
   rank   Rank   @relation(fields: [rankId], references: [id])
 
   @@map("promotions")
-}
-
-model CoursesForRanks {
-  courseId String @db.Uuid
-  course   Course @relation(fields: [courseId], references: [id])
-  rankId   String @db.Uuid
-  rank     Rank   @relation(fields: [rankId], references: [id])
-
-  @@id([courseId, rankId])
-  @@map("courses_for_ranks")
 }
 
 model PromotionRequirement {
